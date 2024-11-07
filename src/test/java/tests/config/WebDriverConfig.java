@@ -4,6 +4,10 @@ package tests.config;
 import org.aeonbits.owner.Config;
 import java.net.URL;
 
+@Config.Sources({
+        "classpath:${env}.properties"
+})
+
 public interface WebDriverConfig extends Config {
 
     @Key("baseUrl")
@@ -14,7 +18,11 @@ public interface WebDriverConfig extends Config {
     @DefaultValue("CHROME")
     Browser getBrowser();
 
+    @Key("browser.version")
+    @DefaultValue("100.0")
+    String getBrowserVersion();
+
     @Key("URL")
-    @DefaultValue("http://localhost:4444")
+    @DefaultValue("https://user1:1234@selenoid.autotests.cloud/wd/hub")
     URL getRemoteURL();
 }
