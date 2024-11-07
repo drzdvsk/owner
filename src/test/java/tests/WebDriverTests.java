@@ -26,16 +26,20 @@ public class WebDriverTests {
     public void testGithub() {
 
         WebDriverConfig config = ConfigFactory.create(WebDriverConfig.class, System.getProperties());
+        String env = System.getProperty("env", "local");
 
         System.out.println("URL: " + config.getRemoteURL());
 
         assertThat(config.getBaseUrl()).isEqualTo("https://github.com");
         assertThat(config.getBrowser()).isEqualTo(CHROME);
         assertThat(config.getBrowserVersion()).isEqualTo("100.0");
-        assertThat(config.getRemoteURL().toString())
-                .isIn("https://localhost:8080", "https://user1:1234@selenoid.autotests.cloud/wd/hub");
-
-
+        if ("local".equals(env)) {
+            assertThat(config.getRemoteURL().toString()).isEqualTo("https://localhost:8080");
+        } else if ("remote".equals(env)) {
+            assertThat(config.getRemoteURL().toString()).isEqualTo("https://user1:1234@selenoid.autotests.cloud/wd/hub");
+        } else {
+            throw new IllegalArgumentException("Unknown env: " + env);
+        }
     }
 
     @AfterEach
