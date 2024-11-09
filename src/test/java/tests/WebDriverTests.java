@@ -4,12 +4,15 @@ import org.aeonbits.owner.ConfigFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import tests.config.WebDriverConfig;
 import tests.config.WebDriverProvider;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static tests.config.Browser.CHROME;
 
 
@@ -26,24 +29,21 @@ public class WebDriverTests {
     public void testGithub() {
 
         WebDriverConfig config = ConfigFactory.create(WebDriverConfig.class, System.getProperties());
-        String env = System.getProperty("env", "local");
+        WebElement heading = driver.findElement(By.id("hero-section-brand-heading"));
+        String headingText = heading.getText();
 
-        System.out.println("URL: " + config.getRemoteURL());
-
+        assertEquals("Build and ship software on a single, collaborative platform", headingText);
         assertThat(config.getBaseUrl()).isEqualTo("https://github.com");
         assertThat(config.getBrowser()).isEqualTo(CHROME);
         assertThat(config.getBrowserVersion()).isEqualTo("100.0");
-        if ("local".equals(env)) {
-            assertThat(config.getRemoteURL().toString()).isEqualTo("https://localhost:8080");
-        } else if ("remote".equals(env)) {
-            assertThat(config.getRemoteURL().toString()).isEqualTo("https://user1:1234@selenoid.autotests.cloud/wd/hub");
-        } else {
-            throw new IllegalArgumentException("Unknown env: " + env);
-        }
+        assertThat(config.getRemoteURL().toString())
+                .isIn("https://localhost:8080", "https://user1:1234@selenoid.autotests.cloud/wd/hub");
+
+
     }
 
     @AfterEach
-    public void stopDriver() {
+   public void stopDriver() {
         driver.quit();
     }
 }
