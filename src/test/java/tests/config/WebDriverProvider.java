@@ -8,6 +8,9 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 
 import java.util.function.Supplier;
 
+import static org.openqa.selenium.remote.BrowserType.CHROME;
+import static org.openqa.selenium.remote.BrowserType.FIREFOX;
+
 public class WebDriverProvider implements Supplier<WebDriver> {
 
     private final WebDriverConfig config;
